@@ -70,6 +70,10 @@ struct ast_node *make_cmd_down(){
   return node;
 }
 
+struct ast_node *make_cmd_print(struct ast_node *expr){
+  
+}
+
 void ast_destroy(struct ast *self) {
 
 }
