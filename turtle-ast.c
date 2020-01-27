@@ -22,7 +22,8 @@ struct ast_node *make_cmd_forward(struct ast_node *expr){
   node->u.cmd = CMD_FORWARD;
   node->children_count = 1;
   node->children[0] = expr;
-  printf("CC");
+  node->u.value = expr->u.value;
+  printf("expr valeur : %f", expr->u.value);
   return node;
 }
 
@@ -30,6 +31,8 @@ struct ast_node *make_cmd_backward(struct ast_node *expr){
   struct ast_node *node = calloc(1, sizeof(struct ast_node));
   node->kind = KIND_CMD_SIMPLE;
   node->u.cmd = CMD_BACKWARD;
+  node->children_count = 1;
+  node->children[0] = expr;
   node->u.value = expr->u.value;
   printf("expr valeur : %f", expr->u.value);
   return node;
@@ -39,6 +42,8 @@ struct ast_node *make_cmd_left(struct ast_node *expr){
   struct ast_node *node = calloc(1, sizeof(struct ast_node));
   node->kind = KIND_CMD_SIMPLE;
   node->u.cmd = CMD_LEFT;
+  node->children_count = 1;
+  node->children[0] = expr;
   node->u.value = expr->u.value;
   printf("expr valeur : %f", expr->u.value);
   return node;
@@ -48,6 +53,8 @@ struct ast_node *make_cmd_right(struct ast_node *expr){
   struct ast_node *node = calloc(1, sizeof(struct ast_node));
   node->kind = KIND_CMD_SIMPLE;
   node->u.cmd = CMD_RIGHT;
+  node->children_count = 1;
+  node->children[0] = expr;
   node->u.value = expr->u.value;
   printf("expr valeur : %f", expr->u.value);
   return node;
@@ -57,7 +64,8 @@ struct ast_node *make_cmd_up(struct ast_node *expr){
   struct ast_node *node = calloc(1, sizeof(struct ast_node));
   node->kind = KIND_CMD_SIMPLE;
   node->u.cmd = CMD_UP;
-  printf("expr valeur : %f", expr->u.value);
+  node->children_count = 1;
+  node->children[0] = expr;
   return node;
 }
 
@@ -65,7 +73,8 @@ struct ast_node *make_cmd_down(struct ast_node *expr){
   struct ast_node *node = calloc(1, sizeof(struct ast_node));
   node->kind = KIND_CMD_SIMPLE;
   node->u.cmd = CMD_DOWN;
-  printf("expr valeur : %f", expr->u.value);
+  node->children_count = 1;
+  node->children[0] = expr;
   return node;
 }
 
