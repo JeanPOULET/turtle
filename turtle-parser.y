@@ -37,7 +37,6 @@ void yyerror(struct ast *ret, const char *);
 %token            KW_COLOR    "color"
 %token            KW_UP       "up"
 %token            KW_DOWN     "down"
-
 /* TODO: add other tokens */
 
 %type <node> unit cmds cmd expr
@@ -55,7 +54,12 @@ cmds:
 ;
 
 cmd:
-    KW_FORWARD expr   { }
+    KW_FORWARD    expr   {$$ = make_cmd_forward($1); }
+    KW_BACKWARD   expr   {$$ = make_cmd_backward($1);}
+    KW_LEFT       expr   {$$ = make_cmd_left($1);    }
+    KW_RIGHT      expr   {$$ = make_cmd_right($1);   }
+    KW_UP         expr   {$$ = make_cmd_up($1);      }
+    KW_DOWN       expr   {$$ = make_cmd_down($1);    }
 ;
 
 expr:
