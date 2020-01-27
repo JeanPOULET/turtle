@@ -34,9 +34,12 @@ void yyerror(struct ast *ret, const char *);
 %token            KW_BACKWARD "backward"
 %token            KW_LEFT     "left"
 %token            KW_RIGHT    "right"
+<<<<<<< HEAD
 %token            KW_COLOR    "color"
 %token            KW_UP       "up"
 %token            KW_DOWN       "down"
+=======
+>>>>>>> 42985a54f22980c4a6ecdbe47558b67c7d566943
 /* TODO: add other tokens */
 
 %type <node> unit cmds cmd expr
