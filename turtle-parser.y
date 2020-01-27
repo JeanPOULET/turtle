@@ -55,11 +55,11 @@ cmds:
 
 cmd:
     KW_FORWARD    expr   {$$ = make_cmd_forward($2); }
-    KW_BACKWARD   expr   {$$ = make_cmd_backward($2);}
-    KW_LEFT       expr   {$$ = make_cmd_left($2);    }
-    KW_RIGHT      expr   {$$ = make_cmd_right($2);   }
-    KW_UP         expr   {$$ = make_cmd_up();        }
-    KW_DOWN       expr   {$$ = make_cmd_down();      }
+  | KW_BACKWARD   expr   {$$ = make_cmd_backward($2);}
+  | KW_LEFT       expr   {$$ = make_cmd_left($2);    }
+  | KW_RIGHT      expr   {$$ = make_cmd_right($2);   }
+  | KW_UP         expr   {$$ = make_cmd_up($2);      }
+  | KW_DOWN       expr   {$$ = make_cmd_down($2);    }
 ;
 
 expr:
