@@ -56,21 +56,17 @@ struct ast_node *make_cmd_right(struct ast_node *expr){
   return node;
 }
 
-struct ast_node *make_cmd_up(struct ast_node *expr){
+struct ast_node *make_cmd_up(){
   struct ast_node *node = calloc(1, sizeof(struct ast_node));
   node->kind = KIND_CMD_SIMPLE;
   node->u.cmd = CMD_UP;
-  node->children_count = 1;
-  node->children[0] = expr;
   return node;
 }
 
-struct ast_node *make_cmd_down(struct ast_node *expr){
+struct ast_node *make_cmd_down(){
   struct ast_node *node = calloc(1, sizeof(struct ast_node));
   node->kind = KIND_CMD_SIMPLE;
   node->u.cmd = CMD_DOWN;
-  node->children_count = 1;
-  node->children[0] = expr;
   return node;
 }
 
