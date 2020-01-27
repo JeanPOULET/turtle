@@ -68,6 +68,12 @@ struct ast_node {
 // for example:
 struct ast_node *make_expr_value(double value);
 struct ast_node *make_cmd_forward(struct ast_node *expr);
+struct ast_node *make_cmd_backward(struct ast_node *expr);
+struct ast_node *make_cmd_left(struct ast_node *expr);
+struct ast_node *make_cmd_right(struct ast_node *expr);
+struct ast_node *make_cmd_up();
+struct ast_node *make_cmd_down();
+
 
 // root of the abstract syntax tree
 struct ast {
