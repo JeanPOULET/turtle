@@ -23,7 +23,6 @@ struct ast_node *make_cmd_forward(struct ast_node *expr){
   node->children_count = 1;
   node->children[0] = expr;
   node->u.value = expr->u.value;
-  printf("expr valeur : %f", expr->u.value);
   return node;
 }
 
@@ -34,7 +33,6 @@ struct ast_node *make_cmd_backward(struct ast_node *expr){
   node->children_count = 1;
   node->children[0] = expr;
   node->u.value = expr->u.value;
-  printf("expr valeur : %f", expr->u.value);
   return node;
 }
 
@@ -45,7 +43,6 @@ struct ast_node *make_cmd_left(struct ast_node *expr){
   node->children_count = 1;
   node->children[0] = expr;
   node->u.value = expr->u.value;
-  printf("expr valeur : %f", expr->u.value);
   return node;
 }
 
@@ -56,7 +53,6 @@ struct ast_node *make_cmd_right(struct ast_node *expr){
   node->children_count = 1;
   node->children[0] = expr;
   node->u.value = expr->u.value;
-  printf("expr valeur : %f", expr->u.value);
   return node;
 }
 
