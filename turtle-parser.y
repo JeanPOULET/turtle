@@ -21,13 +21,26 @@ void yyerror(struct ast *ret, const char *);
   struct ast_node *node;
 }
 
+%union {
+  float red;
+  float green;
+  float blue;
+}
+
 %token <value>    VALUE       "value"
 %token <name>     NAME        "name"
 
 %token            KW_FORWARD  "forward"
+%token            KW_BACKWARD "backward"
+%token            KW_LEFT     "left"
+%token            KW_RIGHT    "right"
+%token            KW_COLOR    "color"
+%token            KW_UP       "up"
+%token            KW_DOWN       "down"
 /* TODO: add other tokens */
 
 %type <node> unit cmds cmd expr
+
 
 %%
 
@@ -41,7 +54,7 @@ cmds:
 ;
 
 cmd:
-    KW_FORWARD expr   { /* TODO */ }
+    KW_FORWARD expr   { }
 ;
 
 expr:
