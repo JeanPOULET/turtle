@@ -58,13 +58,8 @@ cmd:
   | KW_BACKWARD   expr   {$$ = make_cmd_backward($2);}
   | KW_LEFT       expr   {$$ = make_cmd_left($2);    }
   | KW_RIGHT      expr   {$$ = make_cmd_right($2);   }
-<<<<<<< HEAD
-  | KW_UP         expr   {$$ = make_cmd_up();      }
-  | KW_DOWN       expr   {$$ = make_cmd_down();    }
-=======
   | KW_UP                {make_cmd_up();      }
   | KW_DOWN              {make_cmd_down();    }
->>>>>>> bb7303b283d9e759cc2d055b9fb63932d700f752
 ;
 
 expr:
