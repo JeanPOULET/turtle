@@ -42,6 +42,7 @@ enum ast_kind {
   KIND_EXPR_BINOP,
   KIND_EXPR_BLOCK,
   KIND_EXPR_NAME,
+  KIND_EXPR_UNOP,
 };
 
 #define AST_CHILDREN_MAX 3
