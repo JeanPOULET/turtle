@@ -124,6 +124,12 @@ struct ast_node *make_cmd_home(){
   return node;
 }
 
+struct ast_node *make_cmd_repeat(struct ast_node *expr, struct ast_node *expr2){
+  struct ast_node *node = calloc(1, sizeof(struct ast_node));
+  return node;
+}
+
+
 void ast_destroy(struct ast *self) {
 
 }

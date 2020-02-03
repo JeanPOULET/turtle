@@ -40,7 +40,11 @@ void yyerror(struct ast *ret, const char *);
 %token            KW_PRINT    "print"
 %token            KW_HEADING  "heading"
 %token            KW_POSITION "position"
+<<<<<<< HEAD
 %token            KW_HOME     "home"
+=======
+%token            KW_REPEAT   "repeat"
+>>>>>>> 30da6b3b211d570024c90062782a40d75c790ab3
 /* TODO: add other tokens */
 
 %type <node> unit cmds cmd expr
@@ -69,6 +73,7 @@ cmd:
   | KW_COLOR      expr    {$$ = make_cmd_color($2);      }
   | KW_HEADING    expr    {$$ = make_cmd_heading($2);    }
   | KW_HOME               {$$ = make_cmd_home();         }
+  | KW_REPEAT expr expr   {$$ = make_cmd_repeat($2,$3);  }
 ;
 
 expr:
