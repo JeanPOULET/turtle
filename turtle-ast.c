@@ -16,6 +16,13 @@ struct ast_node *make_expr_value(double value) {
   return node;
 }
 
+struct ast_node *make_expr_name(const char *name) {
+  struct ast_node *node = calloc(1, sizeof(struct ast_node));
+  node->kind = KIND_EXPR_NAME;
+  node->u.name = name;
+  return node;
+}
+
 struct ast_node *make_cmd_forward(struct ast_node *expr){
   struct ast_node *node = calloc(1, sizeof(struct ast_node));
   node->kind = KIND_CMD_SIMPLE;
@@ -71,8 +78,23 @@ struct ast_node *make_cmd_down(){
 }
 
 struct ast_node *make_cmd_print(struct ast_node *expr){
-  printf("Param : %s",expr->u.name);
-  
+  struct ast_node *node = calloc(1, sizeof(struct ast_node));
+  node->kind = KIND_CMD_SIMPLE;
+  node->u.cmd = CMD_PRINT;
+  node->children_count = 1;
+  node->children[0] = expr;
+  printf("Param : %s\n",expr->u.name);
+  return node;
+}
+
+struct ast_node *make_cmd_heading(struct ast_node *expr){
+  struct ast_node *node = calloc(1, sizeof(struct ast_node));
+  node->kind = KIND_CMD_SIMPLE;
+  node->u.cmd = CMD_HEADING;
+  node->children_count = 1;
+  node->children[0] = expr;
+  node->u.value = expr->u.value;
+  return node;
 }
 
 void ast_destroy(struct ast *self) {

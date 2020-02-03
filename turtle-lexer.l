@@ -10,6 +10,7 @@
 %option warn 8bit nodefault noyywrap
 
 DIGIT [0-9]
+STR   [A-z]*
 %%
 
 {DIGIT}+              { yylval.value = strtod(yytext, NULL); return VALUE; }
@@ -19,7 +20,8 @@ DIGIT [0-9]
 "right"               { return KW_RIGHT;                                   }
 "up"                  { return KW_UP;                                      }
 "down"                { return KW_DOWN;                                    }
-"print"               { return KW_PRINT;                                   }
+"heading"             { return KW_HEADING;                                } 
+
 [\n\t ]*              /* whitespace */
 .                     { fprintf(stderr, "Unknown token: '%s'\n", yytext); exit(EXIT_FAILURE); }
 

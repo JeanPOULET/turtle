@@ -38,6 +38,8 @@ void yyerror(struct ast *ret, const char *);
 %token            KW_UP       "up"
 %token            KW_DOWN     "down"
 %token            KW_PRINT    "print"
+%token            KW_HEADING  "heading"
+
 /* TODO: add other tokens */
 
 %type <node> unit cmds cmd expr
@@ -62,11 +64,12 @@ cmd:
   | KW_UP                {$$ = make_cmd_up();        }
   | KW_DOWN              {$$ = make_cmd_down();      }
   | KW_PRINT      expr   {$$ = make_cmd_print($2);   }
+  | KW_HEADING    expr   {$$ = make_cmd_heading($2); }
 ;
 
 expr:
     VALUE             { $$ = make_expr_value($1); }
-
+  | NAME              { $$ = make_expr_name($1);  }
     /* TODO: add identifier */
 ;
 
