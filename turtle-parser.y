@@ -60,7 +60,7 @@ cmd:
   | KW_RIGHT      expr   {$$ = make_cmd_right($2);   }
   | KW_UP                {$$ = make_cmd_up();        }
   | KW_DOWN              {$$ = make_cmd_down();      }
-  | KW_PRINT      expr   {$$ = make_cmd_print();     }
+  | KW_PRINT      expr   {$$ = make_cmd_print($2);   }
 ;
 
 expr:
