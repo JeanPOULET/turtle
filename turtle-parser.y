@@ -30,7 +30,6 @@ void yyerror(struct ast *ret, const char *);
 %token <value>    VALUE       "value"
 %token <name>     NAME        "name"
 
-%token            KW_PRINT    "print"
 %token            KW_FORWARD  "forward"
 %token            KW_BACKWARD "backward"
 %token            KW_LEFT     "left"
@@ -40,7 +39,6 @@ void yyerror(struct ast *ret, const char *);
 %token            KW_DOWN     "down"
 %token            KW_PRINT    "print"
 %token            KW_HEADING  "heading"
-
 %token            KW_POSITION "position"
 /* TODO: add other tokens */
 
