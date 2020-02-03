@@ -71,6 +71,7 @@ struct ast_node *make_cmd_down(){
 }
 
 struct ast_node *make_cmd_print(struct ast_node *expr){
+  printf("Param : %s",expr->u.name);
   
 }
 
