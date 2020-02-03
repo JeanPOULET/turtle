@@ -15,16 +15,16 @@ COMM  #{1}[^\n]*
 {COMM}                /*COMMS*/
 {DIGIT}+              { yylval.value = strtod(yytext, NULL); return VALUE; }
 "print"               { return KW_PRINT;                                   }
-
 "forward"             { return KW_FORWARD;                                 }
 "backward"            { return KW_BACKWARD;                                }
 "left"                { return KW_LEFT;                                    }
 "right"               { return KW_RIGHT;                                   }
 "up"                  { return KW_UP;                                      }
 "down"                { return KW_DOWN;                                    }
-"heading"             { return KW_HEADING;                                } 
+"heading"             { return KW_HEADING;                                 } 
 "position"            { return KW_POSITION;                                }
 "color"               { return KW_COLOR;                                   }
+"repeat"              { return KW_REPEAT;                                  }
 
 [\n\t ]*              /* whitespace */
 .                     { fprintf(stderr, "Unknown token: '%s'\n", yytext); exit(EXIT_FAILURE); }
