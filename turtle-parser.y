@@ -40,6 +40,7 @@ void yyerror(struct ast *ret, const char *);
 %token            KW_PRINT    "print"
 %token            KW_HEADING  "heading"
 %token            KW_POSITION "position"
+%token            KW_HOME     "home"
 /* TODO: add other tokens */
 
 %type <node> unit cmds cmd expr
@@ -66,7 +67,8 @@ cmd:
   | KW_PRINT      expr    {$$ = make_cmd_print($2);      }
   | KW_POSITION expr expr {$$ = make_cmd_position($2,$3);}
   | KW_COLOR      expr    {$$ = make_cmd_color($2);      }
-  | KW_HEADING    expr   {$$ = make_cmd_heading($2); }
+  | KW_HEADING    expr    {$$ = make_cmd_heading($2);    }
+  | KW_HOME               {$$ = make_cmd_home();         }
 ;
 
 expr:

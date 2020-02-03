@@ -117,6 +117,13 @@ struct ast_node *make_cmd_color(struct ast_node *expr){
   return node;
 }
 
+struct ast_node *make_cmd_home(){
+  struct ast_node *node = calloc(1, sizeof(struct ast_node));
+  node->kind = KIND_CMD_SIMPLE;
+  node->u.cmd = CMD_HOME;
+  return node;
+}
+
 void ast_destroy(struct ast *self) {
 
 }
