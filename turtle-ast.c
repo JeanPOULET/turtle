@@ -70,6 +70,17 @@ struct ast_node *make_cmd_down(){
   return node;
 }
 
+struct ast_node *make_cmd_position(struct ast_node *expr, struct ast_node *expr2){
+  struct ast_node *node = calloc(1, sizeof(struct ast_node));
+  node->kind = KIND_CMD_SIMPLE;
+  node->u.cmd = CMD_POSITION;
+  node->children_count = 2;
+  node->children[0] = expr;
+  node->children[1] = expr2;
+  node->u.value = expr->u.value;
+  return node;
+}
+
 struct ast_node *make_cmd_print(struct ast_node *expr){
   printf("Param : %s",expr->u.name);
   

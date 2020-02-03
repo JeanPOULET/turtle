@@ -13,13 +13,17 @@ DIGIT [0-9]
 %%
 
 {DIGIT}+              { yylval.value = strtod(yytext, NULL); return VALUE; }
+"print"               { return KW_PRINT;                                   }
+
 "forward"             { return KW_FORWARD;                                 }
 "backward"            { return KW_BACKWARD;                                }
 "left"                { return KW_LEFT;                                    }
 "right"               { return KW_RIGHT;                                   }
 "up"                  { return KW_UP;                                      }
 "down"                { return KW_DOWN;                                    }
-"print"               { return KW_PRINT;                                   }
+"position"            { return KW_POSITION;                                }
+"color"               { return KW_COLOR;                                   }
+
 [\n\t ]*              /* whitespace */
 .                     { fprintf(stderr, "Unknown token: '%s'\n", yytext); exit(EXIT_FAILURE); }
 
