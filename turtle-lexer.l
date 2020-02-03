@@ -10,8 +10,9 @@
 %option warn 8bit nodefault noyywrap
 
 DIGIT [0-9]
+COMM  #{1}[^\n]*
 %%
-
+{COMM}                /*COMMS*/
 {DIGIT}+              { yylval.value = strtod(yytext, NULL); return VALUE; }
 "print"               { return KW_PRINT;                                   }
 
