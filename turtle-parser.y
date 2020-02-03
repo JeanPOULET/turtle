@@ -37,6 +37,7 @@ void yyerror(struct ast *ret, const char *);
 %token            KW_COLOR    "color"
 %token            KW_UP       "up"
 %token            KW_DOWN     "down"
+%token            KW_PRINT    "print"
 /* TODO: add other tokens */
 
 %type <node> unit cmds cmd expr
