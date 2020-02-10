@@ -40,14 +40,23 @@ void yyerror(struct ast *ret, const char *);
 %token            KW_PRINT    "print"
 %token            KW_HEADING  "heading"
 %token            KW_POSITION "position"
-<<<<<<< HEAD
 %token            KW_HOME     "home"
-=======
 %token            KW_REPEAT   "repeat"
->>>>>>> 30da6b3b211d570024c90062782a40d75c790ab3
+%token            KW_PROC     "proc"
+%token            KW_CALL     "call"
+%token            KW_SET      "set"
+%token            RED         "red"
+%token            BLUE        "blue"
+%token            YELLOW      "yellow"
+%token            CYAN        "cyan"
+%token            GRAY        "gray"
+%token            WHITE       "white"
+%token            BLACK       "black"
+%token            MAGENTA     "magenta"
+%token            GREEN       "green"
 /* TODO: add other tokens */
 
-%type <node> unit cmds cmd expr
+%type <node> unit cmds cmd expr color
 
 
 %%
@@ -61,6 +70,8 @@ cmds:
   | /* empty */       { $$ = NULL; }
 ;
 
+
+
 cmd:
     KW_FORWARD    expr    {$$ = make_cmd_forward($2);    }  
   | KW_BACKWARD   expr    {$$ = make_cmd_backward($2);   }
@@ -68,18 +79,29 @@ cmd:
   | KW_RIGHT      expr    {$$ = make_cmd_right($2);      }
   | KW_UP                 {$$ = make_cmd_up();           }
   | KW_DOWN               {$$ = make_cmd_down();         }
-  | KW_PRINT      expr    {$$ = make_cmd_print($2);      }
+  | KW_PROC       expr    {$$ = make_cmd_proc($2);       }
+  | KW_CALL       expr    {$$ = make_cmd_call($2);       }
+  | KW_SET      expr expr {$$ = make_cmd_set($2,$3);     }
   | KW_POSITION expr expr {$$ = make_cmd_position($2,$3);}
-  | KW_COLOR      expr    {$$ = make_cmd_color($2);      }
+  | KW_COLOR      color   {$$ = make_cmd_color($2);     }
+  | KW_COLOR  VALUE VALUE VALUE    {$$ = make_cmd_color();     }
   | KW_HEADING    expr    {$$ = make_cmd_heading($2);    }
   | KW_HOME               {$$ = make_cmd_home();         }
   | KW_REPEAT expr expr   {$$ = make_cmd_repeat($2,$3);  }
 ;
 
+color:
+    RED               { $$ = make_color_value(0);}
+;
+
 expr:
     VALUE             { $$ = make_expr_value($1); }
   | NAME              { $$ = make_expr_name($1);  }
-    /* TODO: add identifier */
+  | "-" expr          { $$ = make_expr_unop($2);  }
+  | expr "-" expr     { $$ = make_expr_binop('-',$1,$3);}
+  | expr "+" expr     { $$ = make_expr_binop('+',$1,$3);}
+
+
 ;
 
 %%

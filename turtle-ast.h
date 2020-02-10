@@ -46,6 +46,7 @@ enum ast_kind {
 };
 
 #define AST_CHILDREN_MAX 3
+#define MAX_VARIABLES 256
 
 // a node in the abstract syntax tree
 struct ast_node {
@@ -64,22 +65,37 @@ struct ast_node {
   struct ast_node *next;  // the next node in the sequence
 };
 
+struct rgb {
+  double r;
+  double g;
+  double b;
+};
+
+
 
 // TODO: make some constructors to use in parser.y
 // for example:
 struct ast_node *make_expr_value(double value);
 struct ast_node *make_expr_name(const char *name);
+struct ast_node *make_expr_unop(struct ast_node *expr);
 struct ast_node *make_cmd_forward(struct ast_node *expr);
 struct ast_node *make_cmd_backward(struct ast_node *expr);
 struct ast_node *make_cmd_left(struct ast_node *expr);
 struct ast_node *make_cmd_right(struct ast_node *expr);
-struct ast_node *make_cmd_color(struct ast_node *expr);
+struct rgb      *make_color_value(int num_color);
+struct ast_node *make_cmd_color(struct rgb *expr);
+
 struct ast_node *make_cmd_up();
+struct ast_node *make_cmd_proc(struct ast_node *expr);
+struct ast_node *make_cmd_call(struct ast_node *expr);
 struct ast_node *make_cmd_down();
+struct ast_node *make_cmd_home();
 struct ast_node *make_cmd_print(struct ast_node *expr);
 struct ast_node *make_cmd_heading(struct ast_node *expr);
 struct ast_node *make_cmd_position(struct ast_node *expr, struct ast_node *expr2);
+struct ast_node *make_cmd_set(struct ast_node *expr, struct ast_node *expr2);
 struct ast_node *make_cmd_repeat(struct ast_node *expr, struct ast_node *expr2);
+struct ast_node *make_expr_binop(char op,struct ast_node *expr, struct ast_node *expr2);
 
 
 // root of the abstract syntax tree
@@ -96,10 +112,17 @@ struct context {
   double y;
   double angle;
   bool up;
-
+  struct var{
+    char *name;
+    double value;
+  };
+  char *func_names[MAX_VARIABLES];
+  struct var *variables[MAX_VARIABLES];
+  
   // TODO: add procedure handling
   // TODO: add variable handling
 };
+
 
 // create an initial context
 void context_create(struct context *self);
