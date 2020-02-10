@@ -31,7 +31,7 @@ NAME [A-z]*
 "color"               { return KW_COLOR;                                   }
 "home"                { return KW_HOME;                                    }
 "repeat"              { return KW_REPEAT;                                  }
-{NAME}+               { yylval.name = strdup(yytext); return NAME;}
+{NAME}+               { yylval.name = strdup(yytext); return NAME;         }
 "-"                   { return "-";                                        }
 "+"                   { return "+";                                        }
 "{"                   { return "{";                                        }

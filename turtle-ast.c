@@ -27,15 +27,18 @@ struct ast_node *make_expr_name(const char *name) {
 
 struct ast_node *make_cmd_forward(struct ast_node *expr){
   struct ast_node *node = calloc(1, sizeof(struct ast_node));
+  node->u.value = expr->u.value;
   node->kind = KIND_CMD_SIMPLE;
   node->u.cmd = CMD_FORWARD;
   node->children_count = 1;
   node->children[0] = expr;
+  
   return node;
 }
 
 struct ast_node *make_cmd_backward(struct ast_node *expr){
   struct ast_node *node = calloc(1, sizeof(struct ast_node));
+  node->u.value = expr->u.value;
   node->kind = KIND_CMD_SIMPLE;
   node->u.cmd = CMD_BACKWARD;
   node->children_count = 1;
@@ -167,23 +170,89 @@ void ast_eval(const struct ast *self, struct context *ctx) {
  * print
  */
 
-void ast_print(const struct ast *self) {
-  switch(self->unit->kind){
-
-    case KIND_CMD_SIMPLE :
-
-      switch(self->unit->u.cmd){
-        case CMD_BACKWARD :
-          printf("Cmd BACKWARD\n");
-        break;
-        case CMD_FORWARD :
-          printf("Cmd FORWARD\n");
-        break;
-        case CMD_HOME :
-          printf("Cmd HOME\n");
-        break;        
-      }
-      
-    break;
-  }
+void ast_print_node(struct ast_node *self){
+	switch(self->kind){
+		case KIND_CMD_SIMPLE :
+			switch(self->u.cmd){
+				case CMD_BACKWARD :
+					printf("Cmd : BACKWARD, value :%lf\n", self->u.value);
+				break;
+				case CMD_FORWARD :
+					printf("Cmd : FORWARD, value :%lf\n", self->u.value);
+				break;
+				case CMD_HOME :
+					printf("Cmd : HOME\n");
+				break;      
+				case CMD_UP :
+					printf("Cmd : UP\n");
+				break; 
+				case CMD_DOWN :
+					printf("Cmd : DOWN\n");
+				break; 
+				case CMD_RIGHT :
+					printf("Cmd : RIGHT\n");
+				break; 
+				case CMD_LEFT :
+					printf("Cmd : LEFT\n");
+				break; 
+				case CMD_HEADING :
+					printf("Cmd HEADING\n");
+				break; 
+				case CMD_COLOR :
+					printf("Cmd : COLOR\n");
+				break; 
+				case CMD_POSITION :
+					printf("Cmd : POSITION\n");
+				break; 
+				case CMD_PRINT :
+					printf("Cmd : PRINT");
+				break;
+			}
+		break;
+		case KIND_CMD_REPEAT :
+			printf("Cmd : REPEAT\n");
+		break;
+		case KIND_CMD_BLOCK :
+			printf("Cmd : BLOCK\n");
+		break;
+		case KIND_CMD_PROC :
+			printf("Cmd : PROC\n");
+		break;
+		case KIND_CMD_CALL :
+			printf("Cmd : CALL\n");
+		break;
+		case KIND_CMD_SET :
+			printf("Cmd : SET\n");
+		break;
+		case KIND_EXPR_VALUE :
+			printf("Expr : VALUE\n");
+		break;
+		case KIND_EXPR_FUNC :
+			printf("Expr : FUNC\n");
+		break;
+		case KIND_EXPR_BLOCK :
+			printf("Expr : BLOCK\n");
+		break;
+		case KIND_EXPR_NAME :
+			printf("Expr : NAME\n");
+		break;
+		case KIND_EXPR_BINOP :
+			printf("Expr : BINOP\n");
+		break;
+		case KIND_EXPR_UNOP :
+			printf("Expr : UNOP\n");
+		break;
+	}
+	
+	for(size_t i = 0; i < self->children_count; i++){
+		ast_print_node(self->children[i]);
+	}
 }
+
+void ast_print(const struct ast *self) {
+	ast_print_node(self->unit);
+}
+
+
+
+

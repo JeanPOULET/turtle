@@ -66,7 +66,7 @@ cmd:
   | KW_RIGHT      expr    {$$ = make_cmd_right($2);      }
   | KW_UP                 {$$ = make_cmd_up();           }
   | KW_DOWN               {$$ = make_cmd_down();         }
-  | KW_PROC       expr    {$$ = make_cmd_proc($2);}
+  | KW_PROC       expr    {$$ = make_cmd_proc($2);       }
   | KW_POSITION expr expr {$$ = make_cmd_position($2,$3);}
   | KW_COLOR      expr    {$$ = make_cmd_color($2);      }
   | KW_HEADING    expr    {$$ = make_cmd_heading($2);    }
