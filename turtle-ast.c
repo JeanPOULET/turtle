@@ -31,7 +31,6 @@ struct ast_node *make_cmd_forward(struct ast_node *expr){
   node->u.cmd = CMD_FORWARD;
   node->children_count = 1;
   node->children[0] = expr;
-  node->u.value = expr->u.value;
   return node;
 }
 
@@ -41,7 +40,6 @@ struct ast_node *make_cmd_backward(struct ast_node *expr){
   node->u.cmd = CMD_BACKWARD;
   node->children_count = 1;
   node->children[0] = expr;
-  node->u.value = expr->u.value;
   return node;
 }
 
@@ -51,7 +49,6 @@ struct ast_node *make_cmd_left(struct ast_node *expr){
   node->u.cmd = CMD_LEFT;
   node->children_count = 1;
   node->children[0] = expr;
-  node->u.value = expr->u.value;
   return node;
 }
 
@@ -61,7 +58,7 @@ struct ast_node *make_cmd_right(struct ast_node *expr){
   node->u.cmd = CMD_RIGHT;
   node->children_count = 1;
   node->children[0] = expr;
-  node->u.value = expr->u.value;
+
   return node;
 }
 
@@ -86,7 +83,6 @@ struct ast_node *make_cmd_position(struct ast_node *expr, struct ast_node *expr2
   node->children_count = 2;
   node->children[0] = expr;
   node->children[1] = expr2;
-  node->u.value = expr->u.value;
   return node;
 }
 
@@ -129,6 +125,23 @@ struct ast_node *make_cmd_repeat(struct ast_node *expr, struct ast_node *expr2){
   return node;
 }
 
+struct ast_node *make_expr_binop(char op,struct ast_node *expr, struct ast_node *expr2){
+  struct ast_node *node = calloc(1, sizeof(struct ast_node));
+  node->kind = KIND_EXPR_BINOP;
+  node->children_count = 2;
+  node->children[0] = expr;
+  node->u.op = op;
+  return node;
+}
+
+struct ast_node *make_cmd_proc(struct ast_node *expr){
+  struct ast_node *node = calloc(1, sizeof(struct ast_node));
+  node->kind = KIND_CMD_PROC;
+  node->children_count = 1;
+  node->children[0] = expr;
+  
+  return node;
+}
 
 void ast_destroy(struct ast *self) {
 
@@ -155,5 +168,22 @@ void ast_eval(const struct ast *self, struct context *ctx) {
  */
 
 void ast_print(const struct ast *self) {
+  switch(self->unit->kind){
 
+    case KIND_CMD_SIMPLE :
+
+      switch(self->unit->u.cmd){
+        case CMD_BACKWARD :
+          printf("Cmd BACKWARD\n");
+        break;
+        case CMD_FORWARD :
+          printf("Cmd FORWARD\n");
+        break;
+        case CMD_HOME :
+          printf("Cmd HOME\n");
+        break;        
+      }
+      
+    break;
+  }
 }
