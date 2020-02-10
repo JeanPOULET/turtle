@@ -11,12 +11,17 @@
 
 DIGIT [0-9]
 COMM  #{1}[^\n]*
+NAME [A-z]*
+
 %%
 {COMM}+               { printf("Commentaire");}
 {DIGIT}+              { yylval.value = strtod(yytext, NULL); return VALUE; }
 "print"               { return KW_PRINT;                                   }
 "forward"             { return KW_FORWARD;                                 }
+"fw"                  { return KW_FORWARD;                                 }
 "backward"            { return KW_BACKWARD;                                }
+"bw"                  { return KW_BACKWARD;                                }
+"proc"                { return KW_PROC;                                    }
 "left"                { return KW_LEFT;                                    }
 "right"               { return KW_RIGHT;                                   }
 "up"                  { return KW_UP;                                      }
@@ -26,7 +31,11 @@ COMM  #{1}[^\n]*
 "color"               { return KW_COLOR;                                   }
 "home"                { return KW_HOME;                                    }
 "repeat"              { return KW_REPEAT;                                  }
-
+{NAME}+               { yylval.name = strdup(yytext); return NAME;}
+"-"                   { return "-";                                        }
+"+"                   { return "+";                                        }
+"{"                   { return "{";                                        }
+"}"                   { return "}";                                        }
 [\n\t ]*              /* whitespace */
 .                     { fprintf(stderr, "Unknown token: '%s'\n", yytext); exit(EXIT_FAILURE); }
 

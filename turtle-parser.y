@@ -42,6 +42,7 @@ void yyerror(struct ast *ret, const char *);
 %token            KW_POSITION "position"
 %token            KW_HOME     "home"
 %token            KW_REPEAT   "repeat"
+%token            KW_PROC     "proc"
 /* TODO: add other tokens */
 
 %type <node> unit cmds cmd expr
@@ -65,7 +66,7 @@ cmd:
   | KW_RIGHT      expr    {$$ = make_cmd_right($2);      }
   | KW_UP                 {$$ = make_cmd_up();           }
   | KW_DOWN               {$$ = make_cmd_down();         }
-  | KW_PRINT      expr    {$$ = make_cmd_print($2);      }
+  | KW_PROC       expr    {$$ = make_cmd_proc($2);}
   | KW_POSITION expr expr {$$ = make_cmd_position($2,$3);}
   | KW_COLOR      expr    {$$ = make_cmd_color($2);      }
   | KW_HEADING    expr    {$$ = make_cmd_heading($2);    }
@@ -76,7 +77,10 @@ cmd:
 expr:
     VALUE             { $$ = make_expr_value($1); }
   | NAME              { $$ = make_expr_name($1);  }
-    /* TODO: add identifier */
+  | expr "-" expr     { $$ = make_expr_binop('-',$1,$3);}
+  | expr "+" expr     { $$ = make_expr_binop('+',$1,$3);}
+
+
 ;
 
 %%
