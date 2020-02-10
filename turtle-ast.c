@@ -32,7 +32,6 @@ struct ast_node *make_cmd_forward(struct ast_node *expr){
   node->u.cmd = CMD_FORWARD;
   node->children_count = 1;
   node->children[0] = expr;
-  
   return node;
 }
 
@@ -175,10 +174,10 @@ void ast_print_node(struct ast_node *self){
 		case KIND_CMD_SIMPLE :
 			switch(self->u.cmd){
 				case CMD_BACKWARD :
-					printf("Cmd : BACKWARD, value :%lf\n", self->u.value);
+					printf("Cmd : BACKWARD\n");
 				break;
 				case CMD_FORWARD :
-					printf("Cmd : FORWARD, value :%lf\n", self->u.value);
+					printf("Cmd : FORWARD\n");
 				break;
 				case CMD_HOME :
 					printf("Cmd : HOME\n");
@@ -225,7 +224,7 @@ void ast_print_node(struct ast_node *self){
 			printf("Cmd : SET\n");
 		break;
 		case KIND_EXPR_VALUE :
-			printf("Expr : VALUE\n");
+			printf("Expr : VALUE : %lf\n", self->u.value);
 		break;
 		case KIND_EXPR_FUNC :
 			printf("Expr : FUNC\n");
@@ -234,13 +233,13 @@ void ast_print_node(struct ast_node *self){
 			printf("Expr : BLOCK\n");
 		break;
 		case KIND_EXPR_NAME :
-			printf("Expr : NAME\n");
+			printf("Expr : NAME : %s\n", self->u.name);
 		break;
 		case KIND_EXPR_BINOP :
-			printf("Expr : BINOP\n");
+			printf("Expr : BINOP : %c\n", self->u.op);
 		break;
 		case KIND_EXPR_UNOP :
-			printf("Expr : UNOP\n");
+			printf("Expr : UNOP : %c\n", self->u.op);
 		break;
 	}
 	
