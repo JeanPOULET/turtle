@@ -275,6 +275,9 @@ void context_create(struct context *self) {
 	self->x = 0;
 	self->y = 0;
 	self->up = false;
+	self->color.r = 0;
+	self->color.g = 0;
+	self->color.b = 0;
 }
 
 /*
@@ -370,7 +373,7 @@ void ast_print_node(struct ast_node *self){
 		if(self->children[i]->kind == KIND_EXPR_VALUE){
 			printf("Expr : VALUE = %lf\n", self->children[i]->u.value);				
 		}else if(self->children[i]->kind == KIND_EXPR_NAME){
-			printf("Expr : NAME = %s\n", self->u.name);
+			printf("Expr : NAME = %s\n", self->children[i]->u.name);
 		}
 	}
 	

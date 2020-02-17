@@ -106,22 +106,25 @@ struct ast {
 // do not forget to destroy properly! no leaks allowed!
 void ast_destroy(struct ast *self);
 
+struct var{
+  char *name;
+  double value;
+};
+
 // the execution context
 struct context {
   double x;
   double y;
   double angle;
   bool up;
-  struct {
-    char *name;
-    double value;
-  }var;
+  struct rgb color;
   char *func_names[MAX_VARIABLES];
   struct var *variables[MAX_VARIABLES];
   
   // TODO: add procedure handling..
   // TODO: add variable handling
 };
+
 
 
 // create an initial context

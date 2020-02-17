@@ -43,15 +43,15 @@ NAME [A-z]*
 "gray"                { return GRAY;                                       }
 "white"               { return WHITE;                                      }
 {NAME}+               { yylval.name = strdup(yytext); return NAME;         }
-"-"                   { return "-";                                        }
-"+"                   { return "+";                                        }
-"*"                   { return "*";                                        }
-"/"                   { return "/";                                        }
-"^"                   { return "^";                                        }
-"("                   { return "(";                                        }
-")"                   { return ")";                                        }
-"{"                   { return "{";                                        }
-"}"                   { return "}";                                        }
+"-"                   { return '-';                                        }
+"+"                   { return '+';                                        }
+"*"                   { return '*';                                        }
+"/"                   { return '/';                                        }
+"^"                   { return '^';                                        }
+"("                   { return '(';                                        }
+")"                   { return ')';                                        }
+"{"                   { return '{';                                        }
+"}"                   { return '}';                                        }
 [\n\t ]*              /* whitespace */
 .                     { fprintf(stderr, "Unknown token: '%s'\n", yytext); exit(EXIT_FAILURE); }
 
