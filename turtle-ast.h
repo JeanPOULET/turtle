@@ -112,14 +112,14 @@ struct context {
   double y;
   double angle;
   bool up;
-  struct var{
+  struct {
     char *name;
     double value;
-  };
+  }var;
   char *func_names[MAX_VARIABLES];
   struct var *variables[MAX_VARIABLES];
   
-  // TODO: add procedure handling
+  // TODO: add procedure handling..
   // TODO: add variable handling
 };
 
