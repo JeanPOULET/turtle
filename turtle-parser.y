@@ -92,7 +92,14 @@ cmd:
 
 color:
     RED               { $$ = make_color_value(0);}
-  | BLUE              { $$ = make_color_value(3);}
+  | GREEN             { $$ = make_color_value(1);}
+  | BLUE              { $$ = make_color_value(2);}
+  | CYAN              { $$ = make_color_value(3);}
+  | YELLOW            { $$ = make_color_value(4);}
+  | MAGENTA           { $$ = make_color_value(5);}
+  | BLACK             { $$ = make_color_value(6);}
+  | GRAY              { $$ = make_color_value(7);}
+  | WHITE             { $$ = make_color_value(8);}
 ;
 
 expr:

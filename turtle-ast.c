@@ -110,17 +110,46 @@ struct ast_node *make_cmd_heading(struct ast_node *expr){
 }
 
 struct ast_node *make_cmd_color(struct rgb *expr){
-  struct ast_node *node = calloc(1, sizeof(struct ast_node));
-  node->kind = KIND_CMD_SIMPLE;
-  node->u.cmd = CMD_COLOR;
-  return node;
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	struct ast_node *colorR = calloc(1, sizeof(struct ast_node));
+	struct ast_node *colorG = calloc(1, sizeof(struct ast_node));
+	struct ast_node *colorB = calloc(1, sizeof(struct ast_node));
+	colorR->kind = KIND_EXPR_VALUE;
+	colorB->kind = KIND_EXPR_VALUE;
+	colorG->kind = KIND_EXPR_VALUE;
+
+	colorR->u.value = expr->r;
+	colorB->u.value = expr->g;
+	colorG->u.value = expr->b;
+
+	node->kind = KIND_CMD_SIMPLE;
+	node->u.cmd = CMD_COLOR;
+	node->children_count = 3;
+	node->children[0] = colorR;
+	node->children[1] = colorG;
+	node->children[2] = colorB;
+	return node;
 }
 
 struct ast_node *make_cmd_color_triple(double r, double g, double b){
-  struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	struct ast_node *colorR = calloc(1, sizeof(struct ast_node));
+	struct ast_node *colorG = calloc(1, sizeof(struct ast_node));
+	struct ast_node *colorB = calloc(1, sizeof(struct ast_node));
+	colorR->kind = KIND_EXPR_VALUE;
+	colorG->kind = KIND_EXPR_VALUE;
+	colorB->kind = KIND_EXPR_VALUE;
 
-  node->kind = KIND_CMD_SIMPLE;
-  node->u.cmd = CMD_COLOR;
+	colorR->u.value = r;
+	colorG->u.value = g;
+	colorB->u.value = b;
+
+	node->kind = KIND_CMD_SIMPLE;
+	node->u.cmd = CMD_COLOR;
+	node->children_count = 3;
+	node->children[0] = colorR;
+	node->children[1] = colorG;
+	node->children[2] = colorB;
   return node;
 }
 
@@ -135,48 +164,46 @@ struct rgb *make_color_value(int num_color){
 			green = 0.0;
 			blue = 0.0;
 		break;
-    case 1 : //green
+    	case 1 : //green
 			red = 0.0;
 			green = 1.0;
 			blue = 0.0;
 		break;
-    case 2 : //blue
+    	case 2 : //blue
 			red = 0.0;
 			green = 0.0;
 			blue = 1.0;
 		break;
-    case 3 : //cyan
+    	case 3 : //cyan
 			red = 0.0;
 			green = 1.0;
 			blue = 1.0;
 		break;
-    case 4 : //yellow
+    	case 4 : //yellow
 			red = 1.0;
 			green = 0.0;
 			blue = 1.0;
 		break;
-    case 5 : //magenta
+    	case 5 : //magenta
 			red = 1.0;
 			green = 1.0;
 			blue = 0.0;
 		break;
-    case 6 : //black
+   	 	case 6 : //black
 			red = 0.0;
 			green = 0.0;
 			blue = 0.0;
 		break;
-    case 7 : //gray
+    	case 7 : //gray
 			red = 0.5;
 			green = 0.5;
 			blue = 0.5;
 		break;
-    case 8 : //white
+    	default : //white
 			red = 1.0;
 			green = 1.0;
 			blue = 1.0;
 		break;
-    default:
-    break;
 
 	}
 	color->r = red;
