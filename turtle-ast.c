@@ -61,7 +61,6 @@ struct ast_node *make_cmd_right(struct ast_node *expr){
   node->u.cmd = CMD_RIGHT;
   node->children_count = 1;
   node->children[0] = expr;
-
   return node;
 }
 
@@ -127,7 +126,6 @@ struct rgb *make_color_value(int num_color){
 			green = 0.0;
 			blue = 0.0;
 		break;
-
 	}
 	color->r = red;
 	color->g = green;
@@ -161,7 +159,6 @@ struct ast_node *make_expr_unop(struct ast_node *expr){
   node->kind = KIND_EXPR_UNOP;
   node->children_count =1;
   node->children[0] = expr;
-
   return node;
 }
 
@@ -170,7 +167,6 @@ struct ast_node *make_cmd_proc(struct ast_node *expr){
   node->kind = KIND_CMD_PROC;
   node->children_count = 1;
   node->children[0] = expr;
-  
   return node;
 }
 
@@ -179,7 +175,6 @@ struct ast_node *make_cmd_call(struct ast_node *expr){
   node->kind = KIND_CMD_CALL;
   node->children_count = 1;
   node->children[0] = expr;
-  
   return node;
 }
 
@@ -205,7 +200,6 @@ void context_create(struct context *self) {
   self->x = 0;
   self->y = 0;
   self->up = false;
-
 }
 
 /*
@@ -219,7 +213,6 @@ void ast_eval_node(const struct ast_node *self, struct context *ctx) {
 
 void ast_eval(const struct ast *self, struct context *ctx) {
 	ast_eval_node(self->unit,ctx);	
-
 }
 
 /*
@@ -302,6 +295,7 @@ void ast_print_node(struct ast_node *self){
 	
 	for(size_t i = 0; i < self->children_count; i++){
 		ast_print_node(self->children[i]);
+		printf("%d\n", self->children_count);
 	}
 }
 
