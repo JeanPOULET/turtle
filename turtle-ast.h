@@ -84,6 +84,7 @@ struct ast_node *make_cmd_left(struct ast_node *expr);
 struct ast_node *make_cmd_right(struct ast_node *expr);
 struct rgb      *make_color_value(int num_color);
 struct ast_node *make_cmd_color(struct rgb *expr);
+struct ast_node *make_cmd_color_triple(double r, double g, double b);
 struct ast_node *make_cmd_up();
 struct ast_node *make_cmd_proc(struct ast_node *expr);
 struct ast_node *make_cmd_call(struct ast_node *expr);
