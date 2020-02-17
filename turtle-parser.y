@@ -83,8 +83,8 @@ cmd:
   | KW_CALL       expr    {$$ = make_cmd_call($2);       }
   | KW_SET      expr expr {$$ = make_cmd_set($2,$3);     }
   | KW_POSITION expr expr {$$ = make_cmd_position($2,$3);}
-  | KW_COLOR      color   {$$ = make_cmd_color($2);     }
-  | KW_COLOR  VALUE VALUE VALUE    {$$ = make_cmd_color();     }
+  | KW_COLOR      color   {$$ = make_cmd_color($2);      }
+  | KW_COLOR  VALUE VALUE VALUE {$$ = make_cmd_color_triple($2,$3,$4);     }
   | KW_HEADING    expr    {$$ = make_cmd_heading($2);    }
   | KW_HOME               {$$ = make_cmd_home();         }
   | KW_REPEAT expr expr   {$$ = make_cmd_repeat($2,$3);  }
@@ -92,6 +92,7 @@ cmd:
 
 color:
     RED               { $$ = make_color_value(0);}
+  | BLUE              { $$ = make_color_value(3);}
 ;
 
 expr:

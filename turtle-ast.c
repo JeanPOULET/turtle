@@ -116,6 +116,14 @@ struct ast_node *make_cmd_color(struct rgb *expr){
   return node;
 }
 
+struct ast_node *make_cmd_color_triple(double r, double g, double b){
+  struct ast_node *node = calloc(1, sizeof(struct ast_node));
+
+  node->kind = KIND_CMD_SIMPLE;
+  node->u.cmd = CMD_COLOR;
+  return node;
+}
+
 struct rgb *make_color_value(int num_color){
 	struct rgb *color = calloc(1, sizeof(struct rgb));
 	double red;
@@ -127,6 +135,48 @@ struct rgb *make_color_value(int num_color){
 			green = 0.0;
 			blue = 0.0;
 		break;
+    case 1 : //green
+			red = 0.0;
+			green = 1.0;
+			blue = 0.0;
+		break;
+    case 2 : //blue
+			red = 0.0;
+			green = 0.0;
+			blue = 1.0;
+		break;
+    case 3 : //cyan
+			red = 0.0;
+			green = 1.0;
+			blue = 1.0;
+		break;
+    case 4 : //yellow
+			red = 1.0;
+			green = 0.0;
+			blue = 1.0;
+		break;
+    case 5 : //magenta
+			red = 1.0;
+			green = 1.0;
+			blue = 0.0;
+		break;
+    case 6 : //black
+			red = 0.0;
+			green = 0.0;
+			blue = 0.0;
+		break;
+    case 7 : //gray
+			red = 0.5;
+			green = 0.5;
+			blue = 0.5;
+		break;
+    case 8 : //white
+			red = 1.0;
+			green = 1.0;
+			blue = 1.0;
+		break;
+    default:
+    break;
 
 	}
 	color->r = red;
