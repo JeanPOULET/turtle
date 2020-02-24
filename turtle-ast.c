@@ -112,12 +112,14 @@ struct ast_node *make_cmd_color(struct rgb *expr){
 	struct ast_node *colorG = calloc(1, sizeof(struct ast_node));
 	struct ast_node *colorB = calloc(1, sizeof(struct ast_node));
 	colorR->kind = KIND_EXPR_VALUE;
-	colorB->kind = KIND_EXPR_VALUE;
 	colorG->kind = KIND_EXPR_VALUE;
+	colorB->kind = KIND_EXPR_VALUE;
+	
 
 	colorR->u.value = expr->r;
-	colorB->u.value = expr->g;
-	colorG->u.value = expr->b;
+	colorG->u.value = expr->g;
+	colorB->u.value = expr->b;
+	
 
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_COLOR;
@@ -212,6 +214,7 @@ struct ast_node *make_cmd_home(){
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_HOME;
+
 	return node;
 }
 
@@ -225,6 +228,7 @@ struct ast_node *make_expr_binop(char op,struct ast_node *expr, struct ast_node 
 	node->kind = KIND_EXPR_BINOP;
 	node->children_count = 2;
 	node->children[0] = expr;
+	node->children[1] = expr2;
 	node->u.op = op;
 	return node;
 }
@@ -237,13 +241,17 @@ struct ast_node *make_expr_unop(struct ast_node *expr){
 	return node;
 }
 
+
 struct ast_node *make_cmd_proc(struct ast_node *expr){
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_PROC;
 	node->children_count = 1;
 	node->children[0] = expr;
+
 	return node;
 }
+
+
 
 struct ast_node *make_cmd_call(struct ast_node *expr){
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -275,22 +283,144 @@ void context_create(struct context *self) {
 	self->x = 0;
 	self->y = 0;
 	self->up = false;
-	self->color.r = 0;
-	self->color.g = 0;
-	self->color.b = 0;
+	self->color.r = 0.0;
+	self->color.g = 0.0;
+	self->color.b = 0.0;
+
 }
 
 /*
 * eval
 */
 
-void ast_eval_node(const struct ast_node *self, struct context *ctx) {
+double ast_eval_node(const struct ast_node *self, struct context *ctx) {
+	double x;
+	double y;
+	
+	double value;
+	double value2;
+	switch(self->kind){
+		case KIND_CMD_SIMPLE :
+			switch(self->u.cmd){
+				case CMD_BACKWARD :
+					x=0.0;
+					y=0.0;
+					value = ast_eval_node(self->children[0],ctx);
+					x =  ctx->x + value*sin(ctx->angle*PI/180);
+					y =  ctx->y + value*cos(ctx->angle*PI/180);
+					ctx->x = x;
+					ctx->y = y;
+					if(ctx->up){
+						printf("MoveTo %f %f \n",x,y);
+					}else{
+						printf("LineTo %f %f \n",x,y);
+					}
+					
+				break;
+				case CMD_FORWARD :
+					x=0.0;
+					y=0.0;
+					value = ast_eval_node(self->children[0],ctx);
+					x =  ctx->x - value*sin(ctx->angle*PI/180);
+					y =  ctx->y - value*cos(ctx->angle*PI/180);
+					ctx->x = x;
+					ctx->y = y;
+					if(ctx->up){
+						printf("MoveTo %f %f \n",x,y);
+					}else{
+						printf("LineTo %f %f \n",x,y);
+					}
+
+				break;
+				case CMD_HOME :
+					ctx->up = false;
+					ctx->x = 0.0;
+					ctx->y = 0.0;
+					ctx->color.r =0.0;
+					ctx->color.g =0.0;
+					ctx->color.b =0.0;
+					ctx->angle = 0;
+				break;      
+				case CMD_UP :
+					ctx->up =true;
+				break; 
+				case CMD_DOWN :
+					ctx->up =false;
+				break; 
+				case CMD_RIGHT :
+					value = ast_eval_node(self->children[0],ctx);
+					ctx->angle -= value;
+				break; 
+				case CMD_LEFT :
+					value = ast_eval_node(self->children[0],ctx);
+					ctx->angle += value;
+				break; 
+				case CMD_HEADING :
+					value = ast_eval_node(self->children[0],ctx);
+					ctx->angle = abs(value);
+				break; 
+				case CMD_COLOR :
+					printf("Color ");
+					for(size_t i = 0; i < self->children_count; i++){
+						printf(" %lf ",self->children[i]->u.value);
+					}
+					printf("\n");
+				break; 
+				case CMD_POSITION :
+					value  = ast_eval_node(self->children[0],ctx);
+					value2 = ast_eval_node(self->children[1],ctx);
+					ctx->x = value;
+					ctx->y = value;
+				break; 
+				case CMD_PRINT :
+					
+				break;
+			}
+		break;
+		case KIND_CMD_REPEAT :
+			
+		break;
+		case KIND_CMD_BLOCK :
+			
+		break;
+		case KIND_CMD_PROC :
+			
+		break;
+		case KIND_CMD_CALL :
+			
+		break;
+		case KIND_CMD_SET :
+			
+		break;
+		case KIND_EXPR_FUNC :
+			
+		break;
+		case KIND_EXPR_BINOP :
+			
+		break;
+		case KIND_EXPR_UNOP :
+			
+		break;
+		case KIND_EXPR_BLOCK :
+			
+		break;
+		case KIND_EXPR_NAME :
+		break;
+		case KIND_EXPR_VALUE :
+			return self->u.value;
+		break;
+	}
 			
 
 }
 
 void ast_eval(const struct ast *self, struct context *ctx) {
-	ast_eval_node(self->unit,ctx);	
+	struct ast_node *current = self->unit;
+	while(current !=NULL){
+		ast_eval_node(current,ctx);
+		current = current->next;	
+	}
+	
 }
 
 /*

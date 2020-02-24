@@ -75,6 +75,7 @@ struct rgb {
 
 // TODO: make some constructors to use in parser.y
 // for example:
+bool funcExist(struct ast_node *expr);
 struct ast_node *make_expr_value(double value);
 struct ast_node *make_expr_name(const char *name);
 struct ast_node *make_expr_unop(struct ast_node *expr);
@@ -113,6 +114,8 @@ struct var{
 
 // the execution context
 struct context {
+  int currenFunc;
+  int currentVar;
   double x;
   double y;
   double angle;
