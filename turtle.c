@@ -25,8 +25,9 @@ int main() {
 
     ast_eval(&root, &ctx);
     //ast_print(&root);
-
+	
     ast_destroy(&root);
+	//ctx_destroy(&ctx);
 
     return ret;
 }

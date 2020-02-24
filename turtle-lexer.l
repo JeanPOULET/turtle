@@ -10,13 +10,14 @@
 %option warn 8bit nodefault noyywrap
 
 DIGIT [0-9]
-FLOAT [-+]?([0-9]*\.[0-9]+|[0-9]+)
+FLOAT {DIGIT}[e]?+[\.]?{DIGIT}+
 COMM  #{1}[^\n]*
-NAME [A-z]*
+NAME [A-Z][0-9]*
 
 %%
 {COMM}+               { printf("Commentaire");                             }
-{FLOAT}+              { yylval.value = strtod(yytext, NULL); return VALUE; }
+{DIGIT}+              { yylval.value = strtod(yytext, NULL); return VALUE; }
+{FLOAT}               { yylval.value = strtod(yytext, NULL); return VALUE; }
 "print"               { return KW_PRINT;                                   }
 "forward"             { return KW_FORWARD;                                 }
 "fw"                  { return KW_FORWARD;                                 }
@@ -46,7 +47,14 @@ NAME [A-z]*
 "black"               { return BLACK;                                      }
 "gray"                { return GRAY;                                       }
 "white"               { return WHITE;                                      }
+"sin"                 { return KW_SIN;                                     }
+"cos"                 { return KW_COS;                                     }
+"tan"                 { return KW_TAN;                                     }
+"sqrt"                { return KW_SQRT;                                    }
+"random"              { return KW_RANDOM;                                  }
+
 {NAME}+               { yylval.name = strdup(yytext); return NAME;         }
+","                   { return ',';                                        }
 "-"                   { return '-';                                        }
 "+"                   { return '+';                                        }
 "*"                   { return '*';                                        }

@@ -75,7 +75,6 @@ struct rgb {
 
 // TODO: make some constructors to use in parser.y
 // for example:
-bool funcExist(struct ast_node *expr);
 struct ast_node *make_expr_value(double value);
 struct ast_node *make_expr_name(const char *name);
 struct ast_node *make_expr_unop(struct ast_node *expr);
@@ -85,19 +84,25 @@ struct ast_node *make_cmd_left(struct ast_node *expr);
 struct ast_node *make_cmd_right(struct ast_node *expr);
 struct rgb      *make_color_value(int num_color);
 struct ast_node *make_cmd_color(struct rgb *expr);
-struct ast_node *make_cmd_color_triple(double r, double g, double b);
+//struct ast_node *make_cmd_color_triple(double r, double g, double b);
+struct ast_node *make_cmd_color_triple(struct ast_node *expr, struct ast_node *expr2, struct ast_node *expr3);
 struct ast_node *make_cmd_up();
-struct ast_node *make_cmd_proc(struct ast_node *expr);
+struct ast_node *make_cmd_proc(char *name, struct ast_node *expr2);
 struct ast_node *make_cmd_call(struct ast_node *expr);
 struct ast_node *make_cmd_down();
 struct ast_node *make_cmd_home();
 struct ast_node *make_cmd_print(struct ast_node *expr);
+struct ast_node *make_cmd_block(struct ast_node *expr);
 struct ast_node *make_cmd_heading(struct ast_node *expr);
 struct ast_node *make_cmd_position(struct ast_node *expr, struct ast_node *expr2);
-struct ast_node *make_cmd_set(struct ast_node *expr, struct ast_node *expr2);
+struct ast_node *make_cmd_set(char *name, struct ast_node *expr2);
 struct ast_node *make_cmd_repeat(struct ast_node *expr, struct ast_node *expr2);
 struct ast_node *make_expr_binop(char op,struct ast_node *expr, struct ast_node *expr2);
-
+struct ast_node *make_cmd_random(struct ast_node *expr,struct ast_node *expr2);
+struct ast_node *make_cmd_sin(struct ast_node *expr);
+struct ast_node *make_cmd_cos(struct ast_node *expr);
+struct ast_node *make_cmd_tan(struct ast_node *expr);
+struct ast_node *make_cmd_sqrt(struct ast_node *expr);
 
 // root of the abstract syntax tree
 struct ast {
@@ -107,29 +112,36 @@ struct ast {
 // do not forget to destroy properly! no leaks allowed!
 void ast_destroy(struct ast *self);
 
+
 struct var{
   char *name;
   double value;
 };
 
+struct func{
+  char *name;
+  struct ast_node *next;
+};
+
+
 // the execution context
 struct context {
-  int currenFunc;
+  int currentFunc;
   int currentVar;
   double x;
   double y;
   double angle;
   bool up;
   struct rgb color;
-  char *func_names[MAX_VARIABLES];
-  struct var *variables[MAX_VARIABLES];
+  struct func *func_names;
+  struct var *variables;
   
   // TODO: add procedure handling..
   // TODO: add variable handling
 };
 
 
-
+void ctx_destroy(struct context *self);
 // create an initial context
 void context_create(struct context *self);
 
