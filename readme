@@ -1,0 +1,24 @@
+Réalisé par BATTAGLIA Jérémy et BART Mathieu
+
+Pour utiliser turtle, il faut tout d'abord le compiler :
+
+mkdir build
+cd build
+cmake ..
+make
+
+ensuite il faut utiliser la commande suivant :
+
+cat ../examples/example.turtle | ./turtle | ./turtle-viewer
+
+example doit être remplacer par un fichier de commandes turtle présent dans le dossier examples (d'autres peuvent être ajouter)
+
+| ./turtle-viewer    est à ajouter si l'on souhaite un affichage graphique de l'interprétation des commandes turtle
+
+Par ailleurs il n'est pas fourni avec l'archive alors quand vous aurez crée le dossier build n'oubliez pas de le mettre dedans
+
+On peut aussi utiliser echo pour mettre directement nos commandes dans turtle :
+
+echo -e "fw 100 right 40 forward 140 left 20 color blue forward 40" | ./turtle | ./turtle-viewer
+
+Dans turtle.c le ast_print est en commentaire pour éviter que le viewer ne fonctionne pas à cause des affichages sur la sortie standard du print
