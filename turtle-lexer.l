@@ -15,7 +15,7 @@ COMM  #{1}[^\n]*
 NAME [A-Z][0-9]*
 
 %%
-{COMM}+               { printf("Commentaire");                             }
+{COMM}+               {                                                    }
 {DIGIT}+              { yylval.value = strtod(yytext, NULL); return VALUE; }
 {FLOAT}               { yylval.value = strtod(yytext, NULL); return VALUE; }
 "print"               { return KW_PRINT;                                   }

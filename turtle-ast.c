@@ -532,7 +532,12 @@ double ast_eval_node(const struct ast_node *self, struct context *ctx) {
 				case FUNC_TAN :
 					return tan(ast_eval_node(self->children[0],ctx));
 				case FUNC_SQRT :
-					return sqrt(ast_eval_node(self->children[0],ctx));
+					value =ast_eval_node(self->children[0],ctx);
+					if(value<0.0){
+						fprintf(stderr,"Erreur : nombre négatif dans une racine carrée\n");
+						exit(EXIT_FAILURE);
+					}
+					return sqrt(value);
 				break;
 				case FUNC_RANDOM :
 					
@@ -654,7 +659,23 @@ void ast_print_node(struct ast_node *self){
 			printf("Cmd : SET\n");
 		break;
 		case KIND_EXPR_FUNC :
-			printf("Expr : FUNC\n");
+			printf("Expr : FUNC :");
+			switch(self->u.func){
+				case FUNC_SIN : 
+					printf("SIN");
+				break;
+				case FUNC_COS :
+					printf("COS\n");
+				break;
+				case FUNC_TAN :
+					printf("TAN\n");
+				case FUNC_SQRT :
+					printf("SQRT\n");
+				break;
+				case FUNC_RANDOM :
+					printf("RANDOM\n");
+				break;
+			}
 		break;
 		case KIND_EXPR_BINOP :
 			printf("Expr : BINOP\n");
