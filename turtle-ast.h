@@ -56,7 +56,7 @@ struct ast_node {
     enum ast_cmd cmd;   // kind == KIND_CMD_SIMPLE
     double value;       // kind == KIND_EXPR_VALUE, for literals
     char op;            // kind == KIND_EXPR_BINOP, for operators in expressions
-    const char *name;   // kind == KIND_EXPR_NAME, the name of procedures and variables
+    char *name;   // kind == KIND_EXPR_NAME, the name of procedures and variables
     enum ast_func func; // kind == KIND_EXPR_FUNC, a function
   } u;
 
@@ -76,7 +76,7 @@ struct rgb {
 // TODO: make some constructors to use in parser.y
 // for example:
 struct ast_node *make_expr_value(double value);
-struct ast_node *make_expr_name(const char *name);
+struct ast_node *make_expr_name(char *name);
 struct ast_node *make_expr_unop(struct ast_node *expr);
 struct ast_node *make_cmd_forward(struct ast_node *expr);
 struct ast_node *make_cmd_backward(struct ast_node *expr);
@@ -103,6 +103,7 @@ struct ast_node *make_cmd_sin(struct ast_node *expr);
 struct ast_node *make_cmd_cos(struct ast_node *expr);
 struct ast_node *make_cmd_tan(struct ast_node *expr);
 struct ast_node *make_cmd_sqrt(struct ast_node *expr);
+struct ast_node *make_expr_block(struct ast_node *expr);
 
 // root of the abstract syntax tree
 struct ast {

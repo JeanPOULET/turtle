@@ -1,0 +1,5 @@
+forward 10
+#coucou
+right 120
+fw 10
+print (5+5)

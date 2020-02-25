@@ -17,6 +17,7 @@ int main() {
     }
 
     yylex_destroy();
+    
 
     assert(root.unit);
 
@@ -27,7 +28,7 @@ int main() {
     //ast_print(&root);
 	
     ast_destroy(&root);
-	//ctx_destroy(&ctx);
-
+	  ctx_destroy(&ctx);
+    
     return ret;
 }

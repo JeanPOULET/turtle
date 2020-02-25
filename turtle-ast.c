@@ -19,7 +19,7 @@ struct ast_node *make_expr_value(double value) {
 	return node;
 }
 
-struct ast_node *make_expr_name(const char *name) {
+struct ast_node *make_expr_name(char *name) {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_EXPR_NAME;
 	node->u.name = name;
@@ -93,7 +93,6 @@ struct ast_node *make_cmd_print(struct ast_node *expr){
 	node->u.cmd = CMD_PRINT;
 	node->children_count = 1;
 	node->children[0] = expr;
-	printf("Param : %s\n",expr->u.name);
 	return node;
 }
 
@@ -132,16 +131,6 @@ struct ast_node *make_cmd_color(struct rgb *expr){
 
 struct ast_node *make_cmd_color_triple(struct ast_node *expr, struct ast_node *expr2, struct ast_node *expr3){
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
-	/*struct ast_node *colorR = calloc(1, sizeof(struct ast_node));
-	struct ast_node *colorG = calloc(1, sizeof(struct ast_node));
-	struct ast_node *colorB = calloc(1, sizeof(struct ast_node));
-	colorR->kind = KIND_EXPR_VALUE;
-	colorG->kind = KIND_EXPR_VALUE;
-	colorB->kind = KIND_EXPR_VALUE;
-
-	colorR->u.value = r;
-	colorG->u.value = g;
-	colorB->u.value = b;*/
 
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_COLOR;
@@ -322,26 +311,46 @@ struct ast_node *make_cmd_random(struct ast_node *expr,struct ast_node *expr2){
 	return node;
 }
 
-void ast_destroy(struct ast *self) {
-	struct ast_node *current = self->unit;
-	while(current != NULL){
-		for(size_t i=0;i<current->children_count;++i){
-			free(current->children[i]);
+struct ast_node *make_expr_block(struct ast_node *expr){
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_EXPR_BLOCK;
+	node->children_count = 1;
+	node->children[0] = expr;
+	return node;
+}
+
+void ast_node_destroy(struct ast_node *self){
+	if(self->next != NULL){
+		ast_node_destroy(self->next);
+	}
+
+	for(int i=0;i<self->children_count;i++){
+		if(self->children[i]!=NULL){
+			ast_node_destroy(self->children[i]);
 		}
-		free(current);
-		current = current->next;
+	}
+
+	if(self!=NULL){
+		free(self);
 	}
 }
 
+void ast_destroy(struct ast *self) {
+	ast_node_destroy(self->unit);
+	
+	
+}
+
 void ctx_destroy(struct context *self){
-	for(size_t i=0;i<self->currentFunc;++i){
-		free(self->func_names[i].next);
+	for(int i=0;i<self->currentFunc;i++){
 		free(self->func_names[i].name);
 	}
-	for(size_t i=0;i<self->currentVar;++i){
+	for(int i=0;i<self->currentVar;i++){
 		free(self->variables[i].name);
 	}
 	
+	free(self->variables);
+	free(self->func_names);
 }
 
 /*
@@ -359,14 +368,21 @@ void context_create(struct context *self) {
 	self->func_names = calloc(MAX_VARIABLES, sizeof(struct func));
 	self->variables = calloc(MAX_VARIABLES, sizeof(struct var));
 
-	self->variables[0].name = "PI";
+	char *_pi = "PI";
+	self->variables[0].name = calloc(strlen(_pi)+1,sizeof(char));
+	strcpy(self->variables[0].name,_pi);
 	self->variables[0].value = PI;
 
-	self->variables[1].name = "SQRT2";
+	char *_SQRT2 = "SQRT2";
+	self->variables[1].name = calloc(strlen(_SQRT2)+1,sizeof(char));
+	strcpy(self->variables[1].name,_SQRT2);
 	self->variables[1].value = SQRT2;
 
-	self->variables[2].name = "SQRT3";
+	char *_SQRT3 = "SQRT3";
+	self->variables[2].name = calloc(strlen(_SQRT3)+1,sizeof(char));
+	strcpy(self->variables[2].name,_SQRT3);
 	self->variables[2].value = SQRT3;
+	
 	self->currentFunc=0;
 	self->currentVar=3;
 }
@@ -466,6 +482,8 @@ double ast_eval_node(const struct ast_node *self, struct context *ctx) {
 					ctx->y = value2;
 				break; 
 				case CMD_PRINT :
+					value =ast_eval_node(self->children[0],ctx);
+					fprintf(stderr,"Print : %f\n",value);
 					
 				break;
 			}
@@ -490,11 +508,11 @@ double ast_eval_node(const struct ast_node *self, struct context *ctx) {
 					exit(EXIT_FAILURE);
 				}
 			}
+
 			ctx->func_names[ctx->currentFunc].name = calloc(strlen(self->u.name),sizeof(char));
 			strcpy(ctx->func_names[ctx->currentFunc].name, self->u.name);
 			ctx->func_names[ctx->currentFunc].next = self->children[0];
 			ctx->currentFunc++;
-			printf("Name %s \n",self->u.name);
 			
 		break;
 		case KIND_CMD_CALL :
@@ -571,7 +589,7 @@ double ast_eval_node(const struct ast_node *self, struct context *ctx) {
 			return -ast_eval_node(self->children[0],ctx);
 		break;
 		case KIND_EXPR_BLOCK :
-			
+			return ast_eval_node(self->children[0],ctx);
 		break;
 		case KIND_EXPR_NAME :
 			for(size_t i=0; i<ctx->currentVar;i++){
@@ -588,7 +606,7 @@ double ast_eval_node(const struct ast_node *self, struct context *ctx) {
 		break;
 	}
 			
-
+	return 0.0;
 }
 
 void ast_eval(const struct ast *self, struct context *ctx) {
@@ -605,108 +623,140 @@ void ast_eval(const struct ast *self, struct context *ctx) {
 */
 
 void ast_print_node(struct ast_node *self){
+	int nbRepeat;
+	struct ast_node *current;
 	switch(self->kind){
 		case KIND_CMD_SIMPLE :
 			switch(self->u.cmd){
 				case CMD_BACKWARD :
-					printf("Cmd : BACKWARD\n");
+					printf("BACKWARD");
+					ast_print_node(self->children[0]);
+					printf("\n");
 				break;
 				case CMD_FORWARD :
-					printf("Cmd : FORWARD\n");
+					printf("FORWARD");
+					ast_print_node(self->children[0]);
+					printf("\n");
 				break;
 				case CMD_HOME :
-					printf("Cmd : HOME\n");
+					printf("HOME\n");
 				break;      
 				case CMD_UP :
-					printf("Cmd : UP\n");
+					printf("UP\n");
 				break; 
 				case CMD_DOWN :
-					printf("Cmd : DOWN\n");
+					printf("DOWN\n");
 				break; 
 				case CMD_RIGHT :
-					printf("Cmd : RIGHT\n");
+					printf("RIGHT ");
+					ast_print_node(self->children[0]);
+					printf("\n");
 				break; 
 				case CMD_LEFT :
-					printf("Cmd : LEFT \n");
+					printf("LEFT ");
+					ast_print_node(self->children[0]);
+					printf("\n");
 				break; 
 				case CMD_HEADING :
-					printf("Cmd HEADING\n");
+					printf("HEADING");
+					ast_print_node(self->children[0]);
+					printf("\n");
 				break; 
 				case CMD_COLOR :
-					printf("Cmd : COLOR\n");
+					printf("COLOR");
+					ast_print_node(self->children[0]);
+					ast_print_node(self->children[1]);
+					ast_print_node(self->children[2]);
+					printf("\n");
 				break; 
 				case CMD_POSITION :
-					printf("Cmd : POSITION\n");
+					printf("POSITION");
+					ast_print_node(self->children[0]);
+					ast_print_node(self->children[1]);
+					printf("\n");
 				break; 
 				case CMD_PRINT :
-					printf("Cmd : PRINT");
+					printf("PRINT : ");
+					ast_print_node(self->children[0]);
+					printf("\n");
 				break;
 			}
 		break;
 		case KIND_CMD_REPEAT :
-			printf("Cmd : REPEAT\n");
+			nbRepeat = self->children[0]->u.value;
+			printf("Cmd : REPEAT(%d)\n\t",nbRepeat);
+			
+			for(size_t i=0;i<nbRepeat;++i){
+				ast_print_node(self->children[1]);
+			}
 		break;
 		case KIND_CMD_BLOCK :
-			printf("Cmd : BLOCK\n");
+			printf("\tCmd : BLOCK\n");
+			current = self->children[0];
+			while(current != NULL){
+				printf("\t\t");
+				ast_print_node(current);
+				current = current->next;
+			}
+
 		break;
 		case KIND_CMD_PROC :
-			printf("Cmd : PROC\n");
+			printf("Cmd : PROC : %s\n",self->u.name);
+			ast_print_node(self->children[0]);
 		break;
 		case KIND_CMD_CALL :
-			printf("Cmd : CALL\n");
+			printf("Cmd : CALL : %s\n ",self->u.name);
 		break;
 		case KIND_CMD_SET :
-			printf("Cmd : SET\n");
+			printf("Cmd : SET : %s\n",self->u.name);
 		break;
 		case KIND_EXPR_FUNC :
-			printf("Expr : FUNC :");
 			switch(self->u.func){
 				case FUNC_SIN : 
-					printf("SIN");
+					printf("SIN(%f)",self->children[0]->u.value);
 				break;
 				case FUNC_COS :
-					printf("COS\n");
+					printf("COS(%f)\n",self->children[0]->u.value);
 				break;
 				case FUNC_TAN :
-					printf("TAN\n");
+					printf("TAN(%f)\n",self->children[0]->u.value);
 				case FUNC_SQRT :
-					printf("SQRT\n");
+					printf("SQRT(%f)\n",self->children[0]->u.value);
 				break;
 				case FUNC_RANDOM :
-					printf("RANDOM\n");
+					printf("rand(%f,%f)\n",self->children[0]->u.value,self->children[1]->u.value);
 				break;
 			}
 		break;
 		case KIND_EXPR_BINOP :
-			printf("Expr : BINOP\n");
+			ast_print_node(self->children[0]);
+			printf("%c",self->u.op);
+			ast_print_node(self->children[1]);
 		break;
 		case KIND_EXPR_UNOP :
-			printf("Expr : UNOP\n");
+			ast_print_node(self->children[0]);
 		break;
 		case KIND_EXPR_BLOCK :
-			printf("Expr : BLOCK\n");
+			printf(" (");
+			ast_print_node(self->children[0]);
+			printf(") ");
 		break;
 		case KIND_EXPR_NAME :
+			printf(" %s ", self->u.name);
 		break;
 		case KIND_EXPR_VALUE :
+			printf(" %f ", self->u.value);
 		break;
 	}
 
-	for(size_t i = 0; i < self->children_count; i++){
-		if(self->children[i]->kind == KIND_EXPR_VALUE){
-			printf("Expr : VALUE = %lf\n", self->children[i]->u.value);				
-		}else if(self->children[i]->kind == KIND_EXPR_NAME){
-			printf("Expr : NAME = %s\n", self->children[i]->u.name);
-		}
-	}
-	
-	if(self->next != NULL){
-		ast_print_node(self->next);
-	}	
 }
 
 void ast_print(const struct ast *self){
-	ast_print_node(self->unit);
+	struct ast_node *current = self->unit;
+	while(current !=NULL){
+		ast_print_node(current);
+		current = current->next;
+	}
 }
 
 

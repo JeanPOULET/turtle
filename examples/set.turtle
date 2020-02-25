@@ -1,0 +1,6 @@
+forward 10
+#coucou
+right 120
+fw 10
+set KILLIAN 14
+lt KILLIAN
